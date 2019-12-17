@@ -1,0 +1,50 @@
+name: numproto CI Workflow
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  main:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Python 3.6
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.6
+
+      - name: Cache setup.py
+        uses: actions/cache@v1
+        with: 
+          key: pip-${{ hashFiles('setup.py') }}
+          path: ~/.cache/pip
+
+      - name: Configure/upgrade pip & setuptools and install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade setuptools
+          python -m pip install -e .[dev]
+
+      - name: Running black
+        run: |
+          black --check --exclude "numproto/protobuf/.*_pb2.*" .
+
+      - name: Running isort
+        run: |
+          isort --check-only --indent=4 -rc setup.py numproto tests
+
+      - name: Running pylint
+        run: |
+          pylint --verbose --rcfile=pylint.ini numproto tests
+
+      - name: Running mypy
+        run: |
+          mypy --ignore-missing-imports numproto tests
+
+      - name: Run tests
+        run: |
+          pytest -v
