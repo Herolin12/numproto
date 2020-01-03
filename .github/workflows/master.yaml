@@ -1,4 +1,4 @@
-name: numproto CI Workflow
+name: Lint and test (master)
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  main:
+  master:
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout repository
@@ -19,7 +19,7 @@ jobs:
 
       - name: Cache setup.py
         uses: actions/cache@v1
-        with: 
+        with:
           key: pip-${{ hashFiles('setup.py') }}
           path: ~/.cache/pip
 
