@@ -1,3 +1,7 @@
+# This repository is deprecated.
+
+This repository is deprecated and is no longer maintained.
+
 # NumProto
 
 **NumProto** is a simple python3.6+ library to serialize and deserialize numpy
